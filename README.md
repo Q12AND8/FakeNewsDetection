@@ -117,7 +117,32 @@ df['title'] = df['title'].apply(preprocess_text)
 df['text'] = df['text'].apply(preprocess_text)
 ds['title'] = ds['title'].apply(preprocess_text)
 ds['text'] = ds['text'].apply(preprocess_text)
+
 ```
+
+### Merging Cleaned Datasets
+
+```python
+import pandas as pd
+
+# Load the cleaned datasets
+df_true = pd.read_csv("cleaned_True.csv")
+df_fake = pd.read_csv("cleaned_False.csv")
+
+# Add a label column: 1 for real, 0 for fake
+df_true['label'] = 1
+df_fake['label'] = 0
+
+# Merge the datasets
+df = pd.concat([df_true, df_fake], ignore_index=True)
+
+# Save the merged dataset
+df.to_csv("Merged_Dataset.csv", index=False)
+
+print(df.head())
+print(df.tail())
+```
+
 
 ---
 
@@ -131,6 +156,102 @@ from sklearn.preprocessing import LabelEncoder
 encoder = LabelEncoder()
 df['subject_encoded'] = encoder.fit_transform(df['subject'])
 ds['subject_encoded'] = encoder.transform(ds['subject'])
+```
+
+## Exploratory Data Analysis (EDA)
+
+This section involves analyzing the merged dataset using univariate and bivariate methods to gain insights into the distribution, patterns, and relationships in the data.
+
+---
+
+---
+
+### 1. Univariate Analysis
+
+#### a. Label Distribution (Fake vs Real)
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load merged dataset
+df = pd.read_csv("Merged_Dataset.csv")
+sns.set(style="whitegrid")
+
+plt.figure(figsize=(6,4))
+sns.countplot(x='label', data=df)
+plt.title("Distribution of Fake (0) and Real (1) News")
+plt.xlabel("Label")
+plt.ylabel("Count")
+plt.xticks([0, 1], ['Fake', 'Real'])
+plt.show()
+```
+
+#### b. Subject Frequency
+
+```python
+plt.figure(figsize=(12,6))
+sns.countplot(data=df, y='subject', order=df['subject'].value_counts().index)
+plt.title("Distribution of Subjects")
+plt.xlabel("Count")
+plt.ylabel("Subject")
+plt.show()
+```
+
+#### c. Article Length Distribution
+
+```python
+df['text_length'] = df['text'].apply(lambda x: len(str(x).split()))
+
+plt.figure(figsize=(10,5))
+sns.histplot(df['text_length'], bins=50, kde=True)
+plt.title("Distribution of Article Lengths")
+plt.xlabel("Number of Words")
+plt.ylabel("Frequency")
+plt.show()
+```
+
+#### d. Boxplot of Article Length by Label
+
+```python
+plt.figure(figsize=(8,5))
+sns.boxplot(x='label', y='text_length', data=df)
+plt.title("Article Length by Label (Fake vs Real)")
+plt.xticks([0, 1], ['Fake', 'Real'])
+plt.show()
+```
+
+---
+
+### 2. Bivariate Analysis
+
+#### a. Correlation Matrix
+
+```python
+correlation = df[['text_length', 'subject_encoded', 'label']].corr()
+
+plt.figure(figsize=(6,4))
+sns.heatmap(correlation, annot=True, cmap='coolwarm')
+plt.title("Correlation Matrix")
+plt.show()
+```
+
+#### b. Pairplot
+
+```python
+sns.pairplot(df[['text_length', 'subject_encoded', 'label']], hue='label', palette='husl')
+plt.suptitle("Pairplot: text_length, subject_encoded, label", y=1.02)
+plt.show()
+```
+
+#### c. Grouped Bar Plot: Mean Article Length by Subject and Label
+
+```python
+plt.figure(figsize=(12,6))
+sns.barplot(x='subject', y='text_length', hue='label', data=df, ci=None)
+plt.title("Average Article Length by Subject and Label")
+plt.xticks(rotation=45)
+plt.show()
 ```
 
 ---
