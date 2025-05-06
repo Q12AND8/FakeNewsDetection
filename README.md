@@ -120,6 +120,8 @@ ds['text'] = ds['text'].apply(preprocess_text)
 
 ```
 
+---
+
 ### Merging Cleaned Datasets
 
 ```python
@@ -161,8 +163,6 @@ ds['subject_encoded'] = encoder.transform(ds['subject'])
 ## Exploratory Data Analysis (EDA)
 
 This section involves analyzing the merged dataset using univariate and bivariate methods to gain insights into the distribution, patterns, and relationships in the data.
-
----
 
 ---
 
@@ -257,4 +257,84 @@ plt.show()
 ---
 ## Feature Engineering
 This section outlines the feature engineering techniques applied to enhance the dataset and extract meaningful patterns for fake news detection.
+
+### 1.Text Cleaning and Normalization
+
+```python
+stop_words = set(stopwords.words('english'))
+lemmatizer = WordNetLemmatizer()
+def preprocess_text(text):
+    text = re.sub(r'[^a-zA-Z]', ' ', str(text)) 
+    tokens = word_tokenize(text.lower())  
+    tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words and len(word) > 2]
+    return ' '.join(tokens)
+df['clean_text'] = df['text'].apply(preprocess_text)
+print(df.head())
+```
+---
+
+### 2.TF-IDF Vectorization with N-grams
+
+```python
+tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), max_features=1000)
+tfidf_matrix = tfidf_vectorizer.fit_transform(df['clean_text'])
+tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=tfidf_vectorizer.get_feature_names_out())
+print(df.head())
+```
+---
+ 
+### 3.Data Feature Extraction
+
+```python
+df['date'] = pd.to_datetime(df['date'], dayfirst=False)
+df['day'] = df['date'].dt.day
+df['month'] = df['date'].dt.month
+df['year'] = df['date'].dt.year
+df['weekday'] = df['date'].dt.weekday
+print(df.head())
+```
+---
+
+### 4.Sentiment Score 
+
+```python
+def get_sentiment(text):
+    return TextBlob(str(text)).sentiment.polarity
+df['sentiment'] = df['clean_text'].apply(get_sentiment)
+print(df.head())
+```
+---
+
+### 5.Combine All Features
+
+```python
+meta_features = df[['day', 'month', 'year', 'weekday', 'sentiment']].reset_index(drop=True)
+final_features = pd.concat([meta_features, tfidf_df], axis=1)
+print(df.head())
+```
+---
+
+### 6.Train Word2Vec model 
+
+```python
+tokenized = df['clean_text'].apply(lambda x: x.split())
+w2v_model = Word2Vec(sentences=tokenized, vector_size=100, window=5, min_count=2, workers=4)
+def get_average_vector(tokens, model, vector_size):
+    vectors = [model.wv[word] for word in tokens if word in model.wv]
+    if vectors:
+        return np.mean(vectors, axis=0)
+    else:
+        return np.zeros(vector_size)
+df['w2v_vector'] = tokenized.apply(lambda x: get_average_vector(x, w2v_model, 100))
+print(df.head())
+```
+---
+
+
+
+
+
+
+
+
 
