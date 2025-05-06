@@ -255,4 +255,6 @@ plt.show()
 ```
 
 ---
+## Feature Engineering
+This section outlines the feature engineering techniques applied to enhance the dataset and extract meaningful patterns for fake news detection.
 
