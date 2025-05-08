@@ -535,6 +535,80 @@ Accuracy: 94%+ (varies based on split and embeddings)
 Classification Report: High precision/recall on both classes
 
 Confusion Matrix: Indicates strong generalization capability
+```
+```
+## LSTM Model
+
+``` python
+import pandas as pd
+import numpy as np
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, LSTM, Dense, SpatialDropout1D
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+```
+### 1.Load the Dataset
+``` python
+df = pd.read_csv("DataSetForModel.csv")  # Replace with your CSV path
+df = df[['text', 'label']].dropna()
+```
+### 2.Text preprocessing
+``` python
+max_words = 5000
+max_len = 150
+tokenizer = Tokenizer(num_words=max_words, lower=True)
+tokenizer.fit_on_texts(df['text'].values)
+X = tokenizer.texts_to_sequences(df['text'].values)
+X = pad_sequences(X, maxlen=max_len)# Labels
+y = df['label'].values
+```
+### 3.Train-test split
+``` python
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+### 4.Build LSTM model
+``` python
+model = Sequential()
+model.add(Embedding(max_words,64 ))
+model.add(SpatialDropout1D(0.2))
+model.add(LSTM(32, dropout=0.2, recurrent_dropout=0.2))
+model.add(Dense(1, activation='sigmoid'))  # For binary classification
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+```
+### 5.Train model
+``` python
+history = model.fit(X_train, y_train, epochs=4, batch_size=128, validation_split=0.2)
+```
+### 6.Evaluate
+``` python
+y_pred = model.predict(X_test)
+y_pred_classes = (y_pred > 0.5).astype(int)
+print(classification_report(y_test, y_pred_classes))
+```
+### 7.Save Model
+``` python
+model.save("my_model.h5")
+```
+
+Results
+
+                precision    recall  f1-score   support
+
+           0       0.99      0.98      0.98      4536
+           1       0.98      0.99      0.98      4274
+
+    accuracy                           0.98      8810
+   macro avg       0.98      0.98      0.98      8810
+weighted avg       0.98      0.98      0.98      8810
+```
+```
+
+
+
+
+
 
 
 
