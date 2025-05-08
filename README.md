@@ -468,6 +468,77 @@ weighted avg       0.93      0.93      0.93      8936
 [[4396  291]
 [ 332 3917]]
 ```
+### 1. Load and Preprocess the Dataset
+
+```python
+import pandas as pd
+
+df = pd.read_csv('DataSetForModel.csv')
+
+def parse_w2v_vector(vector_str):
+    if isinstance(vector_str, str):
+        return list(map(float, vector_str.strip('[]').split()))
+    else:
+        return vector_str
+
+df['w2v_vector'] = df['w2v_vector'].apply(parse_w2v_vector)
+```
+### 2. Prepare Features and Labels
+``` python
+X = list(df['w2v_vector'])
+y = df['label']
+```
+### 3. Split into Training and Test Sets
+``` python
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+### 3. Split into Training and Test Sets
+``` python
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+### 4. Train Random Forest Classifier
+``` python
+from sklearn.ensemble import RandomForestClassifier
+
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+```
+### 5. Make Predictions and Evaluate
+``` python
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+y_pred = rf.predict(X_test)
+
+# Accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+# Classification Report
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+# Confusion Matrix
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+```
+### 6. Save Trained Model
+``` python
+import joblib
+
+joblib.dump(rf, 'RandomForest.pkl')
+```
+Results
+Accuracy: 94%+ (varies based on split and embeddings)
+
+Classification Report: High precision/recall on both classes
+
+Confusion Matrix: Indicates strong generalization capability
+
+
+
+
 
 
 
