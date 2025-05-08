@@ -338,12 +338,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 ```
 
-### Step 1: Load the dataset
+### 1. Load the dataset
 ```python
 df = pd.read\_csv("DataSetForModel.csv")
 ```
 
-### Step 2: Convert w2v\_vector string to list of floats
+### 2. Convert w2v\_vector string to list of floats
 ```python
 def convert\_vector(vec\_str):
 vec\_str = vec\_str.strip("\[]")  # Remove square brackets
@@ -353,18 +353,18 @@ return \[float(num) for num in vec\_str.split() if num]  # Split and convert to 
 df\['w2v\_vector'] = df\['w2v\_vector'].apply(convert\_vector)
 ```
 
-### Step 3: Prepare features (X) and target (y)
+### 3. Prepare features (X) and target (y)
 ```python
 X = df\['w2v\_vector'].tolist()
 y = df\['label']
 ```
 
-### Step 4: Train-test split
+### 4. Train-test split
 ```python
 X\_train, X\_test, y\_train, y\_test = train\_test\_split(X, y, test\_size=0.2, random\_state=42)
 ```
 
-### Step 5: Train Logistic Regression model
+### 5. Train Logistic Regression model
 ```python
 log\_reg = LogisticRegression(max\_iter=1000)
 log\_reg.fit(X\_train, y\_train)
