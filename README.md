@@ -329,6 +329,83 @@ df['w2v_vector'] = tokenized.apply(lambda x: get_average_vector(x, w2v_model, 10
 print(df.head())
 ```
 ---
+```python
+import pandas as pd
+from sklearn.model\_selection import train\_test\_split
+from sklearn.linear\_model import LogisticRegression
+from sklearn.metrics import accuracy\_score, classification\_report, confusion\_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
+### Step 1: Load the dataset
+```python
+df = pd.read\_csv("DataSetForModel.csv")
+```
+
+### Step 2: Convert w2v\_vector string to list of floats
+```python
+def convert\_vector(vec\_str):
+vec\_str = vec\_str.strip("\[]")  # Remove square brackets
+return \[float(num) for num in vec\_str.split() if num]  # Split and convert to float
+
+
+df\['w2v\_vector'] = df\['w2v\_vector'].apply(convert\_vector)
+```
+
+### Step 3: Prepare features (X) and target (y)
+```python
+X = df\['w2v\_vector'].tolist()
+y = df\['label']
+```
+
+### Step 4: Train-test split
+```python
+X\_train, X\_test, y\_train, y\_test = train\_test\_split(X, y, test\_size=0.2, random\_state=42)
+```
+
+### Step 5: Train Logistic Regression model
+```python
+log\_reg = LogisticRegression(max\_iter=1000)
+log\_reg.fit(X\_train, y\_train)
+```
+
+### Step 6: Predict on test data
+```python
+y\_pred = log\_reg.predict(X\_test)
+
+# Step 7: Evaluation
+```python
+accuracy = accuracy\_score(y\_test, y\_pred)
+conf\_matrix = confusion\_matrix(y\_test, y\_pred)
+report = classification\_report(y\_test, y\_pred)
+```
+### Print results
+```python
+print(" Accuracy:", accuracy)
+print("\n Confusion Matrix:\n", conf\_matrix)
+print("\n Classification Report:\n", report)Confusion Matrix:
+\[\[4478  209]
+\[ 184 4065]]
+```
+
+Classification Report:
+precision    recall  f1-score   support
+
+```
+       0       0.96      0.96      0.96      4687
+       1       0.95      0.96      0.95      4249
+
+accuracy                           0.96      8936
+```
+
+macro avg       0.96      0.96      0.96      8936
+weighted avg       0.96      0.96      0.96      8936
+```python
+import joblib
+
+joblib.dump(log\_reg, 'LogisticRegression.pkl')
+```
 
 
 
