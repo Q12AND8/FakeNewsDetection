@@ -370,7 +370,7 @@ log\_reg = LogisticRegression(max\_iter=1000)
 log\_reg.fit(X\_train, y\_train)
 ```
 
-### Step 6: Predict on test data
+### 6. Predict on test data
 ```python
 y\_pred = log\_reg.predict(X\_test)
 
