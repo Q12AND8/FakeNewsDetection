@@ -6,3 +6,4 @@ pandas
 joblib
 flask_cors
 tensorflow
+nltk
