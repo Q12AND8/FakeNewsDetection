@@ -9,7 +9,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import string
-import ossaudiodev
+import os
 
 # Download required NLTK data safely
 try:
