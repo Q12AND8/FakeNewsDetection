@@ -9,6 +9,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import string
+import ossaudiodev
 
 # Download required NLTK data safely
 try:
@@ -78,4 +79,5 @@ def api_predict():
     return jsonify(result)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000, use_reloader=False)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
