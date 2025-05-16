@@ -827,7 +827,15 @@ for model in support_data:
     plt.tight_layout()
     plt.show()
 ```
-### Frontend
+## Frontend
+
+This is the frontend of the Fake News Detector web application. It includes:
+
+- A simple and responsive user interface built with Tailwind CSS
+- A form to input news text
+- A button to trigger prediction
+- A result section to display the prediction and confidence
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -839,30 +847,32 @@ for model in support_data:
 </head>
 <body class="container mx-auto p-4 bg-gray-100">
   <h1 class="text-3xl font-bold text-center mb-8 text-blue-600">Fake News Detector (LSTM)</h1>
+
   <!-- Prediction Form -->
-<form method="POST" action="/predict" class="flex flex-col gap-4 mb-8">
-  <textarea
-    name="text"
-    rows="5"
-    class="border p-2 rounded w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-    placeholder="Enter news article text..."
-  ></textarea>
-  <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">
-    Check News
-  </button>
-</form>
-<!-- Prediction Result -->
-{% if result %}
-<div class="mt-4 p-4 bg-white rounded shadow">
-  <p class="text-lg">Prediction: <strong>{{ result.prediction }}</strong></p>
-  <p class="text-lg">Confidence: {{ (result.confidence * 100)|round(2) }}%</p>
-</div>
-{% endif %}
-{% if error %}
-<div class="mt-4 p-4 bg-red-100 text-red-700 rounded shadow">
-  <p>{{ error }}</p>
-</div>
-{% endif %}
+  <form method="POST" action="/predict" class="flex flex-col gap-4 mb-8">
+    <textarea
+      name="text"
+      rows="5"
+      class="border p-2 rounded w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      placeholder="Enter news article text..."
+    ></textarea>
+    <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">
+      Check News
+    </button>
+  </form>
+
+  <!-- Prediction Result -->
+  {% if result %}
+  <div class="mt-4 p-4 bg-white rounded shadow">
+    <p class="text-lg">Prediction: <strong>{{ result.prediction }}</strong></p>
+    <p class="text-lg">Confidence: {{ (result.confidence * 100)|round(2) }}%</p>
+  </div>
+  {% endif %}
+  {% if error %}
+  <div class="mt-4 p-4 bg-red-100 text-red-700 rounded shadow">
+    <p>{{ error }}</p>
+  </div>
+  {% endif %}
 </body>
 </html>
 
