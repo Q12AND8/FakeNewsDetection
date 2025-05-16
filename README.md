@@ -828,7 +828,7 @@ for model in support_data:
     plt.show()
 ```
 ### Frontend
-<pre> ```
+``` html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -865,7 +865,7 @@ for model in support_data:
 {% endif %}
 </body>
 </html>
-``` </pre>
+
 
 
 
