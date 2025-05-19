@@ -888,20 +888,20 @@ FakeNewsDetection
 #### requirements.txt         # Python dependencies
 #### README.md                # Project documentation
 ## Getting Started
-### 1. Clone the repository
+#### 1. Clone the repository
 git clone https://github.com/your-username/FakeNewsDetection.git 
 cd FakeNewsDetection
-### 2. Install dependencies
+#### 2. Install dependencies
 bash
 ``` python
 pip install -r requirements.txt
 ```
-### 3. Run the Flask app
+#### 3. Run the Flask app
 bash
 ``` python
 python app.py
 ```
-### 4. Open in your browser
+#### 4. Open in your browser
 Go to: (https://fakenewsdetection-fe9e.onrender.com)
 
 
