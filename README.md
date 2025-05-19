@@ -877,32 +877,27 @@ This is the frontend of the Fake News Detector web application. It includes:
 </html>
 ```
 ## Project Structure
-php
-FakeNewsDetection
+### FakeNewsDetection
 #### app.py                   # Flask app backend
 #### my_model.h5              # Trained LSTM model
 #### tokenizer.pkl            # Tokenizer used during training
 #### templates/
   ##### index.html           # Frontend interface
-#### static/                  # Static files (CSS, JS, etc.)
 #### requirements.txt         # Python dependencies
 #### README.md                # Project documentation
 ## Getting Started
 #### 1. Clone the repository
-git clone https://github.com/your-username/FakeNewsDetection.git 
-cd FakeNewsDetection
+git clone https://github.com/Q12AND8/FakeNewsDetection.git
 #### 2. Install dependencies
-bash
 ``` python
 pip install -r requirements.txt
 ```
 #### 3. Run the Flask app
-bash
 ``` python
 python app.py
 ```
 #### 4. Open in your browser
-Go to: (https://fakenewsdetection-fe9e.onrender.com)
+Go to: https://fakenewsdetection-fe9e.onrender.com
 
 
 
